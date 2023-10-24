@@ -5,6 +5,7 @@
     routes: [{ name: '登录', path: '/user/login', component: './User/Login' }],
   },
   { path: '/', icon: 'smile', component: './Index',hideInMenu:true },
+  {path: '/:id/InterfaceInfo',component: './[InterfaceInfo]',hideInMenu:true},
   {
     path: '/admin',
     name: '管理页',

@@ -120,7 +120,7 @@ const Index: React.FC = () => {
                                     <div style={{marginBottom:'30px',width:'100%'}}>
                                         <InfoCard
                                             index={index + 1}
-                                            href="https://umijs.org/docs/introduce/introduce"
+                                            href={`${api.id}/InterfaceInfo`}
                                             title={api.name || '测试接口'}
                                             desc={api.description || ''}
                                         />
