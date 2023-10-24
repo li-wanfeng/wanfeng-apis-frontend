@@ -1,10 +1,10 @@
-export default [
+﻿export default [
   {
     path: '/user',
     layout: false,
     routes: [{ name: '登录', path: '/user/login', component: './User/Login' }],
   },
-  { path: '/welcome', name: '欢迎', icon: 'smile', component: './Welcome' },
+  { path: '/', icon: 'smile', component: './Index',hideInMenu:true },
   {
     path: '/admin',
     name: '管理页',
@@ -16,6 +16,6 @@ export default [
     ],
   },
   { name: '查询表格', icon: 'table', path: '/list', component: './TableList' },
-  { path: '/', redirect: '/welcome' },
+  // { path: '/', redirect: '/apiList' },
   { path: '*', layout: false, component: './404' },
 ];

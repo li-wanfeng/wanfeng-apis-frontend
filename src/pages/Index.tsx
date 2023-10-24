@@ -1,0 +1,137 @@
+import {PageContainer} from '@ant-design/pro-components';
+import {useModel} from '@umijs/max';
+import {Card, Col, Row, theme} from 'antd';
+import React, {useEffect, useState} from 'react';
+import {PageInterfaceInfoVOUsingPOST} from "@/services/wfAPI/jiekoumokuai";
+
+/**
+ * 每个单独的卡片，为了复用样式抽成了组件
+ * @param param0
+ * @returns
+ */
+const InfoCard: React.FC<{
+    title: string; index: number; desc: string; href: string;
+}> = ({title, href, index, desc}) => {
+    const {useToken} = theme;
+
+    const {token} = useToken();
+
+    return (<div
+            style={{
+                backgroundColor: token.colorBgContainer, boxShadow: token.boxShadow, borderRadius: '8px', fontSize: '14px', color: token.colorTextSecondary, lineHeight: '22px', padding: '16px 19px', minWidth: '220px', flex: 1,
+            }}
+        >
+            <div
+                style={{
+                    display: 'flex', gap: '4px', alignItems: 'center',
+                }}
+            >
+                <div
+                    style={{
+                        width: 48, height: 48, lineHeight: '22px', backgroundSize: '100%', textAlign: 'center', padding: '8px 16px 16px 12px', color: '#FFF', fontWeight: 'bold', backgroundImage: "url('https://gw.alipayobjects.com/zos/bmw-prod/daaf8d50-8e6d-4251-905d-676a24ddfa12.svg')",
+                    }}
+                >
+                    {index}
+                </div>
+                <div
+                    style={{
+                        fontSize: '16px', color: token.colorText, paddingBottom: 8,
+                    }}
+                >
+                    {title}
+                </div>
+            </div>
+            <div
+                style={{
+                    fontSize: '14px', color: token.colorTextSecondary, textAlign: 'justify', lineHeight: '22px', marginBottom: 8,
+                }}
+            >
+                {desc}
+            </div>
+            <a href={href} target="_blank" rel="noreferrer">
+                查看该API {'>'}
+            </a>
+        </div>);
+};
+
+const Index: React.FC = () => {
+    const {token} = theme.useToken();
+    const {initialState} = useModel('@@initialState');
+    const [loading, setLoading] = useState(false);
+    const [list, setList] = useState<wfAPI.InterfaceInfoVO[]>([])
+    const [total, setTotal] = useState<number>(0);
+
+    //获取数据
+    const loadData = async (current: 1, pageSize: 10) => {
+        setLoading(true);
+        try {
+            const msg = await PageInterfaceInfoVOUsingPOST({
+                current, pageSize
+            })
+            if (msg.code === 0) {
+                setTotal(msg.data?.total || 0);
+                setList(msg.data?.records || [])
+            }
+        } catch (e) {
+        } finally {
+            setLoading(false);
+        }
+
+    }
+    //使用hook  在组件挂载和更新后调用接口获取数据
+    useEffect(()=>{
+        loadData(1,10)
+    },[])
+
+    return (<PageContainer>
+            <Card
+                style={{
+                    borderRadius: 5,
+                }}
+                bodyStyle={{
+                    backgroundImage: initialState?.settings?.navTheme === 'realDark' ? 'background-image: linear-gradient(75deg, #1A1B1F 0%, #191C1F 100%)' : 'background-image: linear-gradient(75deg, #FBFDFF 0%, #F5F7FF 100%)',
+                }}
+            >
+                <div
+                    // style={{
+                    //     // backgroundPosition: '100% -30%', backgroundRepeat: 'no-repeat', backgroundSize: '274px auto', backgroundImage: "url('https://gw.alipayobjects.com/mdn/rms_a9745b/afts/img/A*BuFmQqsB2iAAAAAAAAAAAAAAARQnAQ')",
+                    // }}
+                >
+                    <div
+                        style={{
+                            fontSize: '20px', color: token.colorTextHeading,
+                        }}
+                    >
+                        共收录{total}个接口
+                    </div>
+                    <p>
+
+
+                    </p>
+                    <div
+                        style={{
+                            display: 'flex', flexWrap: 'wrap', gap: 30,
+                        }}
+                    >
+                        {/*gutter={30}，我们为 Row 组件指定了列之间的间距为 30px*/}
+                        <Row gutter={[50,50]} style={{marginBottom:'30px'}}>
+                            {list.map((api, index) => (
+                                <Col span={8} key={api.id}>
+                                    <div style={{marginBottom:'30px',width:'100%'}}>
+                                        <InfoCard
+                                            index={index + 1}
+                                            href="https://umijs.org/docs/introduce/introduce"
+                                            title={api.name || '测试接口'}
+                                            desc={api.description || ''}
+                                        />
+                                    </div>
+                                </Col>
+                            ))}
+                        </Row>
+                    </div>
+                </div>
+            </Card>
+        </PageContainer>);
+};
+
+export default Index;
