@@ -22,7 +22,8 @@ const RequestParams: React.FC<{ data: wfAPI.InterfaceInfoVO }> = ({data}) => {
         setLoading(true)
         try {
             const res = await interfaceInfoinvokeUsingPOST({
-                id: data.id, method: data.method, requestparams: JSON.parse(params), url: data.url, requesttype: data.requesttype
+                id: data.id, method: data.method, requestparams: JSON.parse(params),
+                url: data.url, requesttype: data.requesttype
             })
             if (res.code !== 0) {
                 message.error(res.message);

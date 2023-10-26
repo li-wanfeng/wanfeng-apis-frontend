@@ -1,6 +1,7 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from '@umijs/max';
+import {addSing} from "@/utils/parseUtil";
 
 /** getInterfaceInfoVOById GET /api/interface */
 export async function getInterfaceInfoVOByIdUsingGET(
@@ -67,10 +68,13 @@ export async function interfaceInfoinvokeUsingPOST(
   body: wfAPI.InterfaceInfoInvokeRequset,
   options?: { [key: string]: any },
 ) {
+  let sign = addSing(body)
   return request<wfAPI.BaseResponseObject_>('/api/interface/invoke', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'accessKey':'123',
+      'sign':sign
     },
     data: body,
     ...(options || {}),
